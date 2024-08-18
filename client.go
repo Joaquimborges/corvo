@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const baseURL = "https://api.correios.com.br"
+const BaseURL = "https://api.correios.com.br"
 
 type restClient struct {
 	httpClient     *http.Client

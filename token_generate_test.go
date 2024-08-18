@@ -18,7 +18,7 @@ func TestGenerateAccessToken(t *testing.T) {
 				t.Errorf("error write the response body: %v", err)
 			}
 		} else {
-			w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusCreated)
 			responseBody := buildTokenResponseBytes(t, buildTokenData())
 			_, err := w.Write(responseBody)
 			if err != nil {
