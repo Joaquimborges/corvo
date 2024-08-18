@@ -4,6 +4,13 @@ import "time"
 
 type RequestOptions func(*clientOptions)
 
+type urlKey string
+
+const (
+	//	/token/v1/autentica/cartaopostagem
+	generateAccessTokenUrlKey urlKey = "generate_game_token"
+)
+
 type clientOptions struct {
 	body    any
 	decode  any

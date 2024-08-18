@@ -28,11 +28,10 @@ func generateAccessToken(config *Config, httpClient *restClient) (*tokenData, er
 	}
 
 	body := requestBody{PostCardNumber: config.PostCard}
-	url := fmt.Sprintf("%s/token/v1/autentica/cartaopostagem", baseURL)
 	var responseData tokenData
 
 	err := httpClient.BuildRequest(
-		url,
+		config.UrlMapper[generateAccessTokenUrlKey],
 		http.MethodPost,
 		WithBody(body),
 		WithHeaders(headers),

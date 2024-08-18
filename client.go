@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -86,7 +87,18 @@ func (client *restClient) doRequest(req *http.Request) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	bts, ioErr := io.ReadAll(resp.Body)
+	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+		bytes, err := client.closeBodyAndSendResponse(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("error reading body response: %v", err)
+		}
+		return nil, errors.New(string(bytes))
+	}
+	return client.closeBodyAndSendResponse(resp.Body)
+}
+
+func (client *restClient) closeBodyAndSendResponse(body io.ReadCloser) ([]byte, error) {
+	bts, ioErr := io.ReadAll(body)
 	if ioErr != nil {
 		return nil, fmt.Errorf("error reading body response")
 	}
