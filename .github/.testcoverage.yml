@@ -2,7 +2,7 @@
 # Path to coverprofile file (output of `go test -coverprofile` command).
 #
 
-profile: ccover.short.profile,cover.long.profile
+profile: cover.short.profile,cover.long.profile
 local-prefix: "github.com/Joaquimborges/corvo"
 
 threshold:
