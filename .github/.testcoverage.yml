@@ -1,0 +1,16 @@
+profile: cover.short.profile,cover.long.profile
+local-prefix: "github.com/Joaquimborges/corvo"
+
+threshold:
+  file: 92
+  package: 80
+  total: 85
+
+override:
+  - threshold: 83
+    path: client.go$
+  - threshold: 75
+    path: client_options.go$
+exclude:
+  paths:
+    - main.go$

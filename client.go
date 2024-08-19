@@ -3,13 +3,14 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"time"
 )
 
-const baseURL = "https://api.correios.com.br"
+const BaseURL = "https://api.correios.com.br"
 
 type restClient struct {
 	httpClient     *http.Client
@@ -61,6 +62,7 @@ func (client *restClient) Execute() error {
 	for k, v := range client.requestOptions.headers {
 		request.Header.Set(k, v)
 	}
+	request.Header.Set("content-type", "application/json")
 
 	data, er := client.doRequest(request)
 	if er != nil {
@@ -86,7 +88,18 @@ func (client *restClient) doRequest(req *http.Request) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	bts, ioErr := io.ReadAll(resp.Body)
+	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+		bytes, err := client.closeBodyAndSendResponse(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("error reading body response: %v", err)
+		}
+		return nil, errors.New(string(bytes))
+	}
+	return client.closeBodyAndSendResponse(resp.Body)
+}
+
+func (client *restClient) closeBodyAndSendResponse(body io.ReadCloser) ([]byte, error) {
+	bts, ioErr := io.ReadAll(body)
 	if ioErr != nil {
 		return nil, fmt.Errorf("error reading body response")
 	}
