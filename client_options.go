@@ -8,7 +8,8 @@ type urlKey string
 
 const (
 	//	/token/v1/autentica/cartaopostagem
-	generateAccessTokenUrlKey urlKey = "generate_game_token"
+	GenerateAccessTokenUrlKey  urlKey = "generate_game_token"
+	CheckDeliveryDueDateUrlKey urlKey = "check_delivery_due_date"
 )
 
 type clientOptions struct {

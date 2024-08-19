@@ -33,7 +33,7 @@ func TestGenerateAccessToken(t *testing.T) {
 			PostCard:          "00112233",
 			AuthorizationCode: "bar",
 			UrlMapper: map[urlKey]string{
-				generateAccessTokenUrlKey: server.URL,
+				GenerateAccessTokenUrlKey: server.URL,
 			},
 		}
 		tokenData, err := generateAccessToken(config, NewHttpClient())
@@ -48,7 +48,7 @@ func TestGenerateAccessToken(t *testing.T) {
 			PostCard:          "00112233",
 			AuthorizationCode: "foo",
 			UrlMapper: map[urlKey]string{
-				generateAccessTokenUrlKey: server.URL,
+				GenerateAccessTokenUrlKey: server.URL,
 			},
 		}
 		tokenData, err := generateAccessToken(config, NewHttpClient())

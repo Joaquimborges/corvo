@@ -62,6 +62,7 @@ func (client *restClient) Execute() error {
 	for k, v := range client.requestOptions.headers {
 		request.Header.Set(k, v)
 	}
+	request.Header.Set("content-type", "application/json")
 
 	data, er := client.doRequest(request)
 	if er != nil {

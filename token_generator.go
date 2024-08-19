@@ -23,7 +23,6 @@ type requestBody struct {
 
 func generateAccessToken(config *Config, httpClient *restClient) (*tokenData, error) {
 	headers := map[string]string{
-		"content-type":  "application/json",
 		"authorization": fmt.Sprintf("Basic %s", config.AuthorizationCode),
 	}
 
@@ -31,7 +30,7 @@ func generateAccessToken(config *Config, httpClient *restClient) (*tokenData, er
 	var responseData tokenData
 
 	err := httpClient.BuildRequest(
-		config.UrlMapper[generateAccessTokenUrlKey],
+		config.UrlMapper[GenerateAccessTokenUrlKey],
 		http.MethodPost,
 		WithBody(body),
 		WithHeaders(headers),
