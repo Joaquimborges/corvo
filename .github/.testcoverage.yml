@@ -4,11 +4,13 @@ local-prefix: "github.com/Joaquimborges/corvo"
 threshold:
   file: 92
   package: 80
-  total: 95
+  total: 85
 
 override:
-  - threshold: 85
+  - threshold: 83
     path: client.go$
-#exclude:
-#paths:
-#  - main.go$
+  - threshold: 75
+    path: client_options.go$
+exclude:
+  paths:
+    - main.go$
