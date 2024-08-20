@@ -1,4 +1,4 @@
-package main
+package corvo
 
 type Config struct {
 	PostCard          string

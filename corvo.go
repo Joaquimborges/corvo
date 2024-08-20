@@ -1,4 +1,4 @@
-package main
+package corvo
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 type WebServices interface {
-	CheckDeliveryDueDate(product string, originZipCode string, destineZipCode string) (*DeliveryTimeResponse, error)
+	CheckDeliveryDueDate(productCode string, originZipCode string, destineZipCode string) (*DeliveryTimeResponse, error)
 }
 
 type webServices struct {
@@ -21,14 +21,14 @@ func NewCorreiosWebServices(config *Config) WebServices {
 	}
 }
 
-func (service *webServices) CheckDeliveryDueDate(product string, originZipCode string, destineZipCode string) (*DeliveryTimeResponse, error) {
+func (service *webServices) CheckDeliveryDueDate(productCode string, originZipCode string, destineZipCode string) (*DeliveryTimeResponse, error) {
 	headers, err := service.buildRequestHeaders()
 	if err != nil {
 		return nil, fmt.Errorf("[CheckDeliveryTime] error on generateAccessToken: %v", err)
 	}
 
 	url := service.config.UrlMapper[CheckDeliveryDueDateUrlKey]
-	url += fmt.Sprintf("/%s?cepOrigem=%s&cepDestino=%s", product, originZipCode, destineZipCode)
+	url += fmt.Sprintf("/%s?cepOrigem=%s&cepDestino=%s", productCode, originZipCode, destineZipCode)
 
 	var response DeliveryTimeResponse
 

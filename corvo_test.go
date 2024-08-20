@@ -1,47 +1,32 @@
-package main
+package corvo
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/Joaquimborges/corvo/mocks"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCheckDeliveryDueDate(t *testing.T) {
-	tokenServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if authorization := r.Header.Get("authorization"); authorization != "Basic foo" {
-			w.WriteHeader(http.StatusUnauthorized)
-			_, err := w.Write([]byte(`{"message":"bad credential"}`))
-			if err != nil {
-				t.Errorf("error write the response body: %v", err)
-			}
-		} else {
-			w.WriteHeader(http.StatusCreated)
-			responseBody := buildTokenResponseBytes(t, buildTokenData())
-			_, err := w.Write(responseBody)
-			if err != nil {
-				t.Errorf("error write the response body: %v", err)
-			}
-		}
-	}))
+	tokenServer := mocks.BuildGenerateAccessTokenTestSever(t)
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		destineZipCode := r.URL.Query().Get("cepDestino")
-		if len(destineZipCode) < 8 {
-			w.WriteHeader(http.StatusBadRequest)
-			_, err := w.Write([]byte(`{"message":"invalid destine zip code"}`))
-			if err != nil {
-				t.Errorf("error write the response body: %v", err)
-			}
-		} else {
-			w.WriteHeader(http.StatusOK)
-			_, err := w.Write(buildDeliveryDueDateBytes())
-			if err != nil {
-				t.Errorf("error write the response body: %v", err)
-			}
-		}
-	}))
+	returnErrorIf := func(req *http.Request) bool {
+		destineZipCode := req.URL.Query().Get("cepDestino")
+		return len(destineZipCode) < 8
+	}
+	errorResponseBody := []byte(`{"message":"invalid destine zip code"}`)
+
+	server := httptest.NewServer(mocks.BuildTestHandleFunc(
+		returnErrorIf,
+		errorResponseBody,
+		buildDeliveryDueDateBytes(),
+		http.StatusOK,
+		http.StatusBadRequest,
+		t,
+	))
+
 	defer tokenServer.Close()
 	defer server.Close()
 
