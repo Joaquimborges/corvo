@@ -1,4 +1,4 @@
-package main
+package corvo
 
 const (
 	PackServiceCode = "03310"
