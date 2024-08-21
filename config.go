@@ -39,5 +39,5 @@ type Config struct {
 	*/
 	// 	será usado na base para calcular o preço do frete.
 	AdditionalServices []string
-	UrlMapper          map[urlKey]string
+	UrlMapper          map[EndpointURL]string
 }

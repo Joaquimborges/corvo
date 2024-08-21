@@ -8,6 +8,11 @@ import (
 
 type requestValidator func(*http.Request) bool
 
+var DefaultDestineZipCodeRequestValidation = func(req *http.Request) bool {
+	destineZipCode := req.URL.Query().Get("cepDestino")
+	return len(destineZipCode) < 8
+}
+
 func BuildTestHandleFunc(
 	shouldReturnError requestValidator,
 	errorResponse []byte,

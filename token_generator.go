@@ -30,7 +30,7 @@ func generateAccessToken(config *Config, httpClient *restClient) (*tokenData, er
 	var responseData tokenData
 
 	err := httpClient.BuildRequest(
-		config.UrlMapper[GenerateAccessTokenUrlKey],
+		config.UrlMapper[GenerateAccessTokenURL],
 		http.MethodPost,
 		WithBody(body),
 		WithHeaders(headers),

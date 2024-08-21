@@ -4,13 +4,13 @@ import "time"
 
 type RequestOptions func(*clientOptions)
 
-type urlKey string
+type EndpointURL string
 
 const (
 	//	/token/v1/autentica/cartaopostagem
-	GenerateAccessTokenUrlKey       urlKey = "generate_game_token"
-	CheckDeliveryDueDateUrlKey      urlKey = "check_delivery_due_date"
-	CheckDeliveryProductPriceUrlKey urlKey = "check_delivery_product_price"
+	GenerateAccessTokenURL       EndpointURL = "generate_game_token"
+	CheckDeliveryDueDateURL      EndpointURL = "check_delivery_due_date"
+	CheckDeliveryProductPriceURL EndpointURL = "check_delivery_product_price"
 )
 
 type clientOptions struct {

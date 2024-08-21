@@ -29,7 +29,7 @@ func (ws *webServices) CheckDeliveryDueDate(productCode string, destineZipCode s
 		return nil, fmt.Errorf("[CheckDeliveryDueDate] error on generateAccessToken: %v", err)
 	}
 
-	url := ws.config.UrlMapper[CheckDeliveryDueDateUrlKey]
+	url := ws.config.UrlMapper[CheckDeliveryDueDateURL]
 	url += fmt.Sprintf(
 		"/%s?cepOrigem=%s&cepDestino=%s",
 		productCode,
@@ -58,8 +58,8 @@ func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipC
 	}
 
 	var requestURL string
-	if url, ok := ws.config.UrlMapper[CheckDeliveryProductPriceUrlKey]; !ok {
-		return nil, errors.New("CheckDeliveryProductPriceUrlKey was not founded")
+	if url, ok := ws.config.UrlMapper[CheckDeliveryProductPriceURL]; !ok {
+		return nil, errors.New("CheckDeliveryProductPriceURL was not founded")
 	} else {
 		requestURL = url
 	}
