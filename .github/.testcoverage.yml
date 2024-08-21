@@ -16,4 +16,4 @@ exclude:
     - main.go$
     - entities.go$
     - exemplos/*/main.go$
-    - mocks/*.go$
+    - mocks/builders.go$
