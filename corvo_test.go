@@ -33,6 +33,7 @@ func TestCheckDeliveryDueDate(t *testing.T) {
 	t.Run("should return error on generate access token", func(t *testing.T) {
 		config := &Config{
 			PostCard:          "00112233",
+			OriginZipCode:     "44320000",
 			AuthorizationCode: "foo bar",
 			UrlMapper: map[urlKey]string{
 				GenerateAccessTokenUrlKey:  tokenServer.URL,
@@ -41,7 +42,7 @@ func TestCheckDeliveryDueDate(t *testing.T) {
 		}
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryDueDate("03310", "05746000", "44320000")
+		response, err := wServices.CheckDeliveryDueDate("03310", "05746000")
 
 		require.Error(t, err)
 		require.Nil(t, response)
@@ -52,6 +53,7 @@ func TestCheckDeliveryDueDate(t *testing.T) {
 		config := &Config{
 			PostCard:          "00112233",
 			AuthorizationCode: "foo",
+			OriginZipCode:     "05746000",
 			UrlMapper: map[urlKey]string{
 				GenerateAccessTokenUrlKey:  tokenServer.URL,
 				CheckDeliveryDueDateUrlKey: server.URL,
@@ -59,7 +61,7 @@ func TestCheckDeliveryDueDate(t *testing.T) {
 		}
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryDueDate("03310", "05746000", "00")
+		response, err := wServices.CheckDeliveryDueDate("03310", "00")
 
 		require.Error(t, err)
 		require.Nil(t, response)
@@ -69,6 +71,7 @@ func TestCheckDeliveryDueDate(t *testing.T) {
 	t.Run("should return ok", func(t *testing.T) {
 		config := &Config{
 			PostCard:          "00112233",
+			OriginZipCode:     "44320000",
 			AuthorizationCode: "foo",
 			UrlMapper: map[urlKey]string{
 				GenerateAccessTokenUrlKey:  tokenServer.URL,
@@ -77,7 +80,7 @@ func TestCheckDeliveryDueDate(t *testing.T) {
 		}
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryDueDate("03310", "05746000", "44320000")
+		response, err := wServices.CheckDeliveryDueDate("03310", "05746000")
 
 		require.NoError(t, err)
 		require.NotNil(t, response)
