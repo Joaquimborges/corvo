@@ -23,3 +23,7 @@ go get github.com/Joaquimborges/corvo
 
 - Consultar prazo de entrega
 - Consultar custo total da entrega
+
+### Exemplos
+
+Você pode encontrar exemplos de como usar [aqui](https://github.com/Joaquimborges/corvo/tree/main/exemplos).

@@ -108,7 +108,7 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 
 		require.Error(t, err)
 		require.Nil(t, response)
-		require.Equal(t, "CheckDeliveryProductPriceURL was not founded", err.Error())
+		require.Equal(t, "CheckDeliveryProductPriceURL não foi encontrada", err.Error())
 	})
 
 	t.Run("should return error, invalid destine zip code", func(t *testing.T) {
@@ -159,7 +159,7 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 
 		require.Error(t, err)
 		require.Nil(t, response)
-		require.Contains(t, err.Error(), "error parsing brazilian string amount to float")
+		require.Contains(t, err.Error(), "erro ao converter o preço de string para float")
 	})
 
 	t.Run("should return 200-OK", func(t *testing.T) {

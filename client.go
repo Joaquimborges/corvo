@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const BaseURL = "https://api.correios.com.br"
+const BaseProdURL = "https://api.correios.com.br"
 
 type restClient struct {
 	httpClient     *http.Client
@@ -19,22 +19,17 @@ type restClient struct {
 	method         string
 }
 
-func NewHttpClient() *restClient {
+func newHttpClient() *restClient {
 	return &restClient{}
 }
 
-func (client *restClient) BuildRequest(url, method string, options ...RequestOptions) *restClient {
+func (client *restClient) BuildRequest(url, method string, options ...requestOptions) *restClient {
 	var requestOptions clientOptions
 	for _, option := range options {
 		option(&requestOptions)
 	}
 
-	httpClient := &http.Client{Timeout: 5 * time.Second}
-	if requestOptions.timeout.String() != "0s" {
-		httpClient.Timeout = requestOptions.timeout
-	}
-
-	client.httpClient = httpClient
+	client.httpClient = &http.Client{Timeout: 5 * time.Second}
 	client.requestOptions = &requestOptions
 	client.method = method
 	client.url = url
@@ -46,23 +41,23 @@ func (client *restClient) Execute() error {
 	var buf bytes.Buffer
 	if client.requestOptions.body != nil {
 		if err := json.NewEncoder(&buf).Encode(client.requestOptions.body); err != nil {
-			return fmt.Errorf("error enconde body, message: %s", err.Error())
+			return fmt.Errorf("[restClient] erro ao codificar o corpo da requisição: %v", err)
 		}
 	}
 
 	request, err := http.NewRequest(client.method, client.url, &buf)
 	if err != nil {
 		return fmt.Errorf(
-			"error build %s rest request, message: %v",
+			"erro ao montar uma requisição %s, message: %v",
 			client.method,
 			err,
 		)
 	}
 
+	request.Header.Set("content-type", "application/json")
 	for k, v := range client.requestOptions.headers {
 		request.Header.Set(k, v)
 	}
-	request.Header.Set("content-type", "application/json")
 
 	data, er := client.doRequest(request)
 	if er != nil {
@@ -71,7 +66,7 @@ func (client *restClient) Execute() error {
 
 	if client.requestOptions.decode != nil {
 		if err = json.Unmarshal(data, client.requestOptions.decode); err != nil {
-			return fmt.Errorf("error Unmarshal response: %v", err)
+			return fmt.Errorf("erro em Unmarshal response: %v", err)
 		}
 	}
 	return nil
@@ -81,7 +76,7 @@ func (client *restClient) doRequest(req *http.Request) ([]byte, error) {
 	resp, er := client.httpClient.Do(req)
 	if er != nil {
 		return nil, fmt.Errorf(
-			"error doing client request, message: %s, "+
+			"erro ao executar a requisição, messagem: %s, "+
 				"url: %s",
 			er.Error(), req.URL.Path,
 		)
@@ -91,7 +86,7 @@ func (client *restClient) doRequest(req *http.Request) ([]byte, error) {
 	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
 		bytes, err := client.closeBodyAndSendResponse(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("error reading body response: %v", err)
+			return nil, fmt.Errorf("erro ao ler o corpo da resposta: %v", err)
 		}
 		return nil, errors.New(string(bytes))
 	}
@@ -101,7 +96,7 @@ func (client *restClient) doRequest(req *http.Request) ([]byte, error) {
 func (client *restClient) closeBodyAndSendResponse(body io.ReadCloser) ([]byte, error) {
 	bts, ioErr := io.ReadAll(body)
 	if ioErr != nil {
-		return nil, fmt.Errorf("error reading body response")
+		return nil, ioErr
 	}
 	return bts, nil
 }

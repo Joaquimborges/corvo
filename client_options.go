@@ -1,8 +1,6 @@
 package corvo
 
-import "time"
-
-type RequestOptions func(*clientOptions)
+type requestOptions func(*clientOptions)
 
 type EndpointURL string
 
@@ -17,29 +15,22 @@ type clientOptions struct {
 	body    any
 	decode  any
 	headers map[string]string
-	timeout time.Duration
 }
 
-func WithBody(body any) RequestOptions {
+func withBody(body any) requestOptions {
 	return func(co *clientOptions) {
 		co.body = body
 	}
 }
 
-func WithHeaders(headers map[string]string) RequestOptions {
+func withHeaders(headers map[string]string) requestOptions {
 	return func(co *clientOptions) {
 		co.headers = headers
 	}
 }
 
-func WithDecodeValue(decode any) RequestOptions {
+func withDecodeValue(decode any) requestOptions {
 	return func(co *clientOptions) {
 		co.decode = decode
-	}
-}
-
-func WithTimeout(timeout time.Duration) RequestOptions {
-	return func(co *clientOptions) {
-		co.timeout = timeout
 	}
 }

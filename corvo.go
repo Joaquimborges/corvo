@@ -18,7 +18,7 @@ type webServices struct {
 
 func NewCorreiosWebServices(config *Config) WebServices {
 	return &webServices{
-		client: NewHttpClient(),
+		client: newHttpClient(),
 		config: config,
 	}
 }
@@ -26,7 +26,7 @@ func NewCorreiosWebServices(config *Config) WebServices {
 func (ws *webServices) CheckDeliveryDueDate(productCode string, destineZipCode string) (*DeliveryTimeResponse, error) {
 	headers, err := ws.buildRequestHeaders()
 	if err != nil {
-		return nil, fmt.Errorf("[CheckDeliveryDueDate] error on generateAccessToken: %v", err)
+		return nil, fmt.Errorf("[CheckDeliveryDueDate] erro ao gerar o token de acesso: %v", err)
 	}
 
 	url := ws.config.UrlMapper[CheckDeliveryDueDateURL]
@@ -41,8 +41,8 @@ func (ws *webServices) CheckDeliveryDueDate(productCode string, destineZipCode s
 	err = ws.client.BuildRequest(
 		url,
 		http.MethodGet,
-		WithHeaders(headers),
-		WithDecodeValue(&response),
+		withHeaders(headers),
+		withDecodeValue(&response),
 	).Execute()
 
 	if err != nil {
@@ -54,12 +54,12 @@ func (ws *webServices) CheckDeliveryDueDate(productCode string, destineZipCode s
 func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipCode string) (*DeliveryPrice, error) {
 	headers, err := ws.buildRequestHeaders()
 	if err != nil {
-		return nil, fmt.Errorf("[CheckDeliveryProductPrice] error on generateAccessToken: %v", err)
+		return nil, fmt.Errorf("[CheckDeliveryProductPrice] erro ao gerar o token de acesso %v", err)
 	}
 
 	var requestURL string
 	if url, ok := ws.config.UrlMapper[CheckDeliveryProductPriceURL]; !ok {
-		return nil, errors.New("CheckDeliveryProductPriceURL was not founded")
+		return nil, errors.New("CheckDeliveryProductPriceURL não foi encontrada")
 	} else {
 		requestURL = url
 	}
@@ -85,8 +85,8 @@ func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipC
 	err = ws.client.BuildRequest(
 		requestURL,
 		http.MethodGet,
-		WithHeaders(headers),
-		WithDecodeValue(&response),
+		withHeaders(headers),
+		withDecodeValue(&response),
 	).Execute()
 
 	if err != nil {
@@ -96,11 +96,11 @@ func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipC
 	if response.FinalPrice != "" {
 		price, err := parseBrazilianStrAmountToFloat(response.FinalPrice)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing brazilian string amount to float: %v", err)
+			return nil, fmt.Errorf("erro ao converter o preço de string para float: %v", err)
 		}
 		return newDeliveryPrice(price), nil
 	}
-	return nil, errors.New("the external call may have returned an error")
+	return nil, errors.New("a requisição provavelmente retornou erro")
 }
 
 func (ws *webServices) buildRequestHeaders() (map[string]string, error) {

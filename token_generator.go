@@ -32,9 +32,9 @@ func generateAccessToken(config *Config, httpClient *restClient) (*tokenData, er
 	err := httpClient.BuildRequest(
 		config.UrlMapper[GenerateAccessTokenURL],
 		http.MethodPost,
-		WithBody(body),
-		WithHeaders(headers),
-		WithDecodeValue(&responseData),
+		withBody(body),
+		withHeaders(headers),
+		withDecodeValue(&responseData),
 	).Execute()
 
 	if err != nil {
