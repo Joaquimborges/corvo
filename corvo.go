@@ -94,11 +94,14 @@ func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipC
 	}
 
 	if response.FinalPrice != "" {
-		price, err := parseBrazilianStrAmountToFloat(response.FinalPrice)
-		if err != nil {
-			return nil, fmt.Errorf("erro ao converter o preço de string para float: %v", err)
+		if ws.config.shouldGenerateFloatPrice {
+			price, err := parseBrazilianStrAmountToFloat(response.FinalPrice)
+			if err != nil {
+				return nil, fmt.Errorf("erro ao converter o preço de string para float: %v", err)
+			}
+			return newDeliveryPrice(price, ""), nil
 		}
-		return newDeliveryPrice(price), nil
+		return newDeliveryPrice(0, response.FinalPrice), nil
 	}
 	return nil, errors.New("a requisição provavelmente retornou erro")
 }

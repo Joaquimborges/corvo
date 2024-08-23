@@ -153,6 +153,7 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		config.BaseWidth = 20
 		config.DeliveryType = 2
 		config.AdditionalServices = []string{"001", "019"}
+		config.shouldGenerateFloatPrice = true
 
 		wServices := NewCorreiosWebServices(config)
 		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000")
@@ -162,7 +163,29 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		require.Contains(t, err.Error(), "erro ao converter o preço de string para float")
 	})
 
-	t.Run("should return 200-OK", func(t *testing.T) {
+	t.Run("should return 200-OK for float price", func(t *testing.T) {
+		config := buildConfigs(tokenServer.URL, CheckDeliveryProductPriceURL, server.URL)
+		config.PostCard = "00112233"
+		config.OriginZipCode = "44320000"
+		config.AuthorizationCode = "foo"
+		config.DefaultDeclaredValue = 200
+		config.ObjectBaseWeight = 400
+		config.BaseFulfillment = 20
+		config.BaseHeight = 20
+		config.BaseWidth = 20
+		config.DeliveryType = 2
+		config.AdditionalServices = []string{"001", "019"}
+		config.shouldGenerateFloatPrice = true
+
+		wServices := NewCorreiosWebServices(config)
+		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000")
+
+		require.NoError(t, err)
+		require.NotNil(t, response)
+		require.Equal(t, float64(35.40), response.FloatPrice)
+	})
+
+	t.Run("should return 200-OK for string price", func(t *testing.T) {
 		config := buildConfigs(tokenServer.URL, CheckDeliveryProductPriceURL, server.URL)
 		config.PostCard = "00112233"
 		config.OriginZipCode = "44320000"
@@ -180,7 +203,7 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotNil(t, response)
-		require.Equal(t, float64(35.40), response.Price)
+		require.Equal(t, "35,40", response.StrPrice)
 	})
 }
 
