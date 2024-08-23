@@ -7,19 +7,23 @@ import (
 )
 
 func main() {
-	configs := corvo.Config{
-		PostCard:          "seu cartão postagem",
-		AuthorizationCode: "encoded user & senha", //https://cws.correios.com.br/ajudas
-		UrlMapper: map[corvo.EndpointURL]string{
-			corvo.GenerateAccessTokenURL: "url referente ao tipo de autenticacao",
-			//autentica, cartaopostagem ou contrato
-
-			corvo.CheckDeliveryDueDateURL: "url refente a api prazo",
-		},
-		OriginZipCode: "11111111",
+	urls := map[corvo.EndpointURL]string{
+		corvo.GenerateAccessTokenURL:       "url referente ao tipo de autenticacao", //autentica, cartaopostagem ou contrato
+		corvo.CheckDeliveryProductPriceURL: "url refente a api preço",
 	}
 
-	ws := corvo.NewCorreiosWebServices(&configs)
+	config, er := corvo.NewConfig(
+		"seu cartão postagem",
+		"encoded user & senha", //https://cws.correios.com.br/ajudas
+		urls,
+		corvo.ConfigWithOriginZipCode("11111111"),
+	)
+
+	if er != nil {
+		panic(er)
+	}
+
+	ws := corvo.NewCorreiosWebServices(config)
 	codigoProduto := "03310" //PAC CONTRATO PGTO ENTREGA
 	cepDestino := "22222222"
 

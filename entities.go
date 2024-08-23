@@ -14,9 +14,13 @@ type DeliveryPriceResponse struct {
 }
 
 type DeliveryPrice struct {
-	Price float64 `json:"preco"`
+	FloatPrice float64 `json:"preco_float,omitempty"`
+	StrPrice   string  `json:"preco_str,omitempty"`
 }
 
-func newDeliveryPrice(amount float64) *DeliveryPrice {
-	return &DeliveryPrice{Price: amount}
+func newDeliveryPrice(floatAmount float64, strAmount string) *DeliveryPrice {
+	return &DeliveryPrice{
+		FloatPrice: floatAmount,
+		StrPrice:   strAmount,
+	}
 }

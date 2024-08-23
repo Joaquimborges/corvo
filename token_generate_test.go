@@ -19,7 +19,7 @@ func TestGenerateAccessToken(t *testing.T) {
 				GenerateAccessTokenURL: server.URL,
 			},
 		}
-		tokenData, err := generateAccessToken(config, NewHttpClient())
+		tokenData, err := generateAccessToken(config, newHttpClient())
 
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "bad credential")
@@ -36,7 +36,7 @@ func TestGenerateAccessToken(t *testing.T) {
 		}
 		expectedTokenData := buildTokenData()
 
-		tokenData, err := generateAccessToken(config, NewHttpClient())
+		tokenData, err := generateAccessToken(config, newHttpClient())
 
 		require.NoError(t, err)
 		require.NotNil(t, tokenData)
