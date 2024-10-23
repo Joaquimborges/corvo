@@ -65,7 +65,7 @@ func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipC
 	}
 
 	requestURL += fmt.Sprintf(
-		"/%s?cepDestino=%s&cepOrigem=%s&psObjeto=%d&tpObjeto=%d&comprimento=%d&largura=%d&altura=%dvlDeclarado=%d",
+		"/%s?cepDestino=%s&cepOrigem=%s&psObjeto=%d&tpObjeto=%d&comprimento=%d&largura=%d&altura=%d&vlDeclarado=%d",
 		productCode,
 		destineZipCode,
 		ws.config.OriginZipCode,
