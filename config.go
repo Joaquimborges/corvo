@@ -57,7 +57,12 @@ func NewConfig(postCard, authorizationCode string, urls map[EndpointURL]string, 
 		return nil, errors.New("o mapper de urls não pode estar vazio")
 	}
 
-	var config Config
+	config := Config{
+		PostCard:          postCard,
+		AuthorizationCode: authorizationCode,
+		UrlMapper:         urls,
+	}
+
 	for _, option := range options {
 		option(&config)
 	}
