@@ -2,7 +2,7 @@ package corvo
 
 import "errors"
 
-type cfgOption func(*Config)
+type CfgOption func(*Config)
 
 type Config struct {
 	// cartão postagem: https://www.correios.com.br/correios-facil
@@ -21,7 +21,8 @@ type Config struct {
 
 	// Peso do objeto em gramas.
 	// 	será usado na base para calcular o preço do frete.
-	ObjectBaseWeight int
+	ObjectBaseWeight    int
+	useConfigBaseWeight bool
 
 	// cumprimento base
 	BaseFulfillment int
@@ -48,7 +49,7 @@ type Config struct {
 	UrlMapper          map[EndpointURL]string
 }
 
-func NewConfig(postCard, authorizationCode string, urls map[EndpointURL]string, options ...cfgOption) (*Config, error) {
+func NewConfig(postCard, authorizationCode string, urls map[EndpointURL]string, options ...CfgOption) (*Config, error) {
 	if postCard == "" || authorizationCode == "" {
 		return nil, errors.New("cartão postagem e código de autorização são obrigatórios")
 	}
@@ -79,41 +80,42 @@ func NewConfig(postCard, authorizationCode string, urls map[EndpointURL]string, 
 	return &config, nil
 }
 
-func ConfigWithFloatPriceEnabled() cfgOption {
+func ConfigWithFloatPriceEnabled() CfgOption {
 	return func(c *Config) {
 		c.shouldGenerateFloatPrice = true
 	}
 }
 
-func ConfigWithCheckPriceAdditionalServices(additionalServices []string) cfgOption {
+func ConfigWithCheckPriceAdditionalServices(additionalServices []string) CfgOption {
 	return func(c *Config) {
 		c.AdditionalServices = additionalServices
 	}
 }
 
-func ConfigWithDeliveryType(deliveryType int) cfgOption {
+func ConfigWithDeliveryType(deliveryType int) CfgOption {
 	return func(c *Config) {
 		c.DeliveryType = deliveryType
 	}
 }
 
-func ConfigWithProductSpecification(weight, fulfillment, height, width int) cfgOption {
+func ConfigWithProductSpecification(weight, fulfillment, height, width int) CfgOption {
 	return func(c *Config) {
 		c.ObjectBaseWeight = weight
 		c.BaseFulfillment = fulfillment
 		c.BaseHeight = height
 		c.BaseWidth = width
 		c.productSpecificationsWasSet = true
+		c.useConfigBaseWeight = weight != 0
 	}
 }
 
-func ConfigWithOriginZipCode(zipCode string) cfgOption {
+func ConfigWithOriginZipCode(zipCode string) CfgOption {
 	return func(c *Config) {
 		c.OriginZipCode = zipCode
 	}
 }
 
-func ConfigWithDefaultDeclaredValue(value int) cfgOption {
+func ConfigWithDefaultDeclaredValue(value int) CfgOption {
 	return func(c *Config) {
 		c.DefaultDeclaredValue = value
 	}
