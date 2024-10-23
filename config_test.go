@@ -44,23 +44,6 @@ func TestConfigErrorCases(t *testing.T) {
 			require.Equal(t, tc.expectedErrorMessage, err.Error())
 		})
 	}
-
-	t.Run("shoudl return missing product specifications error", func(t *testing.T) {
-		urls := map[EndpointURL]string{CheckDeliveryProductPriceURL: "/test"}
-		additionalServices := []string{"foo", "bar"}
-		expectedErrorMessage := "adicione as espcificações do produto para usar a api de preço [peso, cumprimento, altura, largura]"
-
-		config, err := NewConfig(
-			"123",
-			"this is a strong code",
-			urls,
-			ConfigWithCheckPriceAdditionalServices(additionalServices),
-		)
-
-		require.Nil(t, config)
-		require.Error(t, err)
-		require.Equal(t, expectedErrorMessage, err.Error())
-	})
 }
 
 func TestBuildFullConfigSuccessfully(t *testing.T) {
@@ -81,7 +64,6 @@ func TestBuildFullConfigSuccessfully(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, config)
-	require.True(t, config.productSpecificationsWasSet)
 	require.True(t, config.shouldGenerateFloatPrice)
 	require.Equal(t, additionalServices, config.AdditionalServices)
 

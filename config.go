@@ -24,9 +24,8 @@ type Config struct {
 
 	// Tipo do objeto da postagem: 1 - Envelope, 2 - Pacote; 3 - Rolo.
 	// 	será usado na base para calcular o preço do frete.
-	DeliveryType                int
-	shouldGenerateFloatPrice    bool
-	productSpecificationsWasSet bool
+	DeliveryType             int
+	shouldGenerateFloatPrice bool
 
 	// serviços adicionais para a consulta de preços
 	/*
@@ -87,10 +86,6 @@ func NewConfig(postCard, authorizationCode string, urls map[EndpointURL]string, 
 		if len(config.AdditionalServices) == 0 {
 			return nil, errors.New("se você pretende usar a api de preço, serviços adicionais é um parametro obrigatório")
 		}
-
-		if !config.productSpecificationsWasSet {
-			return nil, errors.New("adicione as espcificações do produto para usar a api de preço [peso, cumprimento, altura, largura]")
-		}
 	}
 	return &config, nil
 }
@@ -116,7 +111,6 @@ func ConfigWithDeliveryType(deliveryType int) CfgOption {
 func ConfigWithProductDimensions(dimensions *ProductDimensions) CfgOption {
 	return func(c *Config) {
 		c.Dimensions = dimensions
-		c.productSpecificationsWasSet = true
 		c.useConfigDimensions = true
 	}
 }
