@@ -90,7 +90,7 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		config.AuthorizationCode = "foo bar"
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", 0)
+		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", nil)
 
 		require.Error(t, err)
 		require.Nil(t, response)
@@ -104,7 +104,7 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		config.AuthorizationCode = "foo"
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", 0)
+		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", nil)
 
 		require.Error(t, err)
 		require.Nil(t, response)
@@ -117,15 +117,11 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		config.OriginZipCode = "44320000"
 		config.AuthorizationCode = "foo"
 		config.DefaultDeclaredValue = 200
-		config.ObjectBaseWeight = 400
-		config.BaseFulfillment = 20
-		config.BaseHeight = 20
-		config.BaseWidth = 20
 		config.DeliveryType = 2
 		config.AdditionalServices = []string{"001", "019"}
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryProductPrice("03310", "00", 0)
+		response, err := wServices.CheckDeliveryProductPrice("03310", "00", NewProductDimensions(500, 20, 20, 20))
 
 		require.Error(t, err)
 		require.Nil(t, response)
@@ -147,16 +143,12 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		config.OriginZipCode = "44320000"
 		config.AuthorizationCode = "foo"
 		config.DefaultDeclaredValue = 200
-		config.ObjectBaseWeight = 400
-		config.BaseFulfillment = 20
-		config.BaseHeight = 20
-		config.BaseWidth = 20
 		config.DeliveryType = 2
 		config.AdditionalServices = []string{"001", "019"}
 		config.shouldGenerateFloatPrice = true
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", 0)
+		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", NewProductDimensions(500, 20, 20, 20))
 
 		require.Error(t, err)
 		require.Nil(t, response)
@@ -169,20 +161,18 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		config.OriginZipCode = "44320000"
 		config.AuthorizationCode = "foo"
 		config.DefaultDeclaredValue = 200
-		config.ObjectBaseWeight = 400
-		config.BaseFulfillment = 20
-		config.BaseHeight = 20
-		config.BaseWidth = 20
 		config.DeliveryType = 2
 		config.AdditionalServices = []string{"001", "019"}
 		config.shouldGenerateFloatPrice = true
+		config.Dimensions = NewProductDimensions(500, 20, 20, 20)
+		config.useConfigDimensions = true
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", 0)
+		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", nil)
 
 		require.NoError(t, err)
 		require.NotNil(t, response)
-		require.Equal(t, float64(35.40), response.FloatPrice)
+		require.Equal(t, 35.40, response.FloatPrice)
 	})
 
 	t.Run("should return 200-OK for string price", func(t *testing.T) {
@@ -191,15 +181,11 @@ func TestCheckDeliveryProductPrice(t *testing.T) {
 		config.OriginZipCode = "44320000"
 		config.AuthorizationCode = "foo"
 		config.DefaultDeclaredValue = 200
-		config.ObjectBaseWeight = 0
-		config.BaseFulfillment = 20
-		config.BaseHeight = 20
-		config.BaseWidth = 20
 		config.DeliveryType = 2
 		config.AdditionalServices = []string{"001", "019"}
 
 		wServices := NewCorreiosWebServices(config)
-		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", 400)
+		response, err := wServices.CheckDeliveryProductPrice("03310", "05746000", NewProductDimensions(500, 20, 20, 20))
 
 		require.NoError(t, err)
 		require.NotNil(t, response)

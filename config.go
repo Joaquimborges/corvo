@@ -19,17 +19,8 @@ type Config struct {
 	// 	será usado na base para calcular o preço do frete.
 	DefaultDeclaredValue int
 
-	// Peso do objeto em gramas.
-	// 	será usado na base para calcular o preço do frete.
-	ObjectBaseWeight    int
-	useConfigBaseWeight bool
-
-	// cumprimento base
-	BaseFulfillment int
-	// largura base
-	BaseHeight int
-	// altura base
-	BaseWidth int
+	Dimensions          *ProductDimensions
+	useConfigDimensions bool
 
 	// Tipo do objeto da postagem: 1 - Envelope, 2 - Pacote; 3 - Rolo.
 	// 	será usado na base para calcular o preço do frete.
@@ -47,6 +38,30 @@ type Config struct {
 	// 	será usado na base para calcular o preço do frete.
 	AdditionalServices []string
 	UrlMapper          map[EndpointURL]string
+}
+
+type ProductDimensions struct {
+	// Peso do objeto em gramas.
+	// 	será usado na base para calcular o preço do frete.
+	Weight int
+
+	// cumprimento base
+	Fulfillment int
+
+	// largura base
+	Height int
+
+	// altura base
+	Width int
+}
+
+func NewProductDimensions(weight, fulfillment, height, width int) *ProductDimensions {
+	return &ProductDimensions{
+		Weight:      weight,
+		Fulfillment: fulfillment,
+		Height:      height,
+		Width:       width,
+	}
 }
 
 func NewConfig(postCard, authorizationCode string, urls map[EndpointURL]string, options ...CfgOption) (*Config, error) {
@@ -98,14 +113,11 @@ func ConfigWithDeliveryType(deliveryType int) CfgOption {
 	}
 }
 
-func ConfigWithProductSpecification(weight, fulfillment, height, width int) CfgOption {
+func ConfigWithProductDimensions(dimensions *ProductDimensions) CfgOption {
 	return func(c *Config) {
-		c.ObjectBaseWeight = weight
-		c.BaseFulfillment = fulfillment
-		c.BaseHeight = height
-		c.BaseWidth = width
+		c.Dimensions = dimensions
 		c.productSpecificationsWasSet = true
-		c.useConfigBaseWeight = weight != 0
+		c.useConfigDimensions = true
 	}
 }
 

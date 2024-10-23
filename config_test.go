@@ -74,7 +74,7 @@ func TestBuildFullConfigSuccessfully(t *testing.T) {
 		ConfigWithCheckPriceAdditionalServices(additionalServices),
 		ConfigWithFloatPriceEnabled(),
 		ConfigWithDeliveryType(1),
-		ConfigWithProductSpecification(20, 20, 20, 20),
+		ConfigWithProductDimensions(NewProductDimensions(200, 20, 20, 20)),
 		ConfigWithOriginZipCode("04376000"),
 		ConfigWithDefaultDeclaredValue(300),
 	)

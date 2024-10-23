@@ -17,7 +17,7 @@ func main() {
 		"encoded user & senha", //https://cws.correios.com.br/ajudas
 		urls,
 		corvo.ConfigWithDefaultDeclaredValue(200),
-		corvo.ConfigWithProductSpecification(500, 20, 20, 20),
+		corvo.ConfigWithProductDimensions(corvo.NewProductDimensions(500, 20, 20, 20)),
 		corvo.ConfigWithDeliveryType(2),                                      // Tipo do objeto da postagem: 1 - Envelope, 2 - Pacote; 3 - Rolo.
 		corvo.ConfigWithCheckPriceAdditionalServices([]string{"001", "019"}), // "001" --> AVISO DE RECEBIMENTO | "019" --> VALOR DECLARADO NACIONAL
 	)
@@ -30,7 +30,7 @@ func main() {
 	codigoProduto := "03310" //PAC CONTRATO PGTO ENTREGA
 	cepDestino := "22222222"
 
-	data, er := ws.CheckDeliveryProductPrice(codigoProduto, cepDestino, 0)
+	data, er := ws.CheckDeliveryProductPrice(codigoProduto, cepDestino, nil)
 	if er != nil {
 		// trate o erro
 		log.Fatal(er)

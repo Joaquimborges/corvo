@@ -8,7 +8,7 @@ import (
 
 type WebServices interface {
 	CheckDeliveryDueDate(productCode string, destineZipCode string) (*DeliveryTimeResponse, error)
-	CheckDeliveryProductPrice(productCode string, destineZipCode string, weight int) (*DeliveryPrice, error)
+	CheckDeliveryProductPrice(productCode string, destineZipCode string, dimensions *ProductDimensions) (*DeliveryPrice, error)
 }
 
 type webServices struct {
@@ -51,7 +51,7 @@ func (ws *webServices) CheckDeliveryDueDate(productCode string, destineZipCode s
 	return &response, nil
 }
 
-func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipCode string, weight int) (*DeliveryPrice, error) {
+func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipCode string, dimensions *ProductDimensions) (*DeliveryPrice, error) {
 	headers, err := ws.buildRequestHeaders()
 	if err != nil {
 		return nil, fmt.Errorf("[CheckDeliveryProductPrice] erro ao gerar o token de acesso %v", err)
@@ -64,8 +64,8 @@ func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipC
 		requestURL = url
 	}
 
-	if ws.config.useConfigBaseWeight {
-		weight = ws.config.ObjectBaseWeight
+	if ws.config.useConfigDimensions {
+		dimensions = ws.config.Dimensions
 	}
 
 	requestURL += fmt.Sprintf(
@@ -73,11 +73,11 @@ func (ws *webServices) CheckDeliveryProductPrice(productCode string, destineZipC
 		productCode,
 		destineZipCode,
 		ws.config.OriginZipCode,
-		weight,
+		dimensions.Weight,
 		ws.config.DeliveryType,
-		ws.config.BaseFulfillment,
-		ws.config.BaseHeight,
-		ws.config.BaseWidth,
+		dimensions.Fulfillment,
+		dimensions.Height,
+		dimensions.Width,
 		ws.config.DefaultDeclaredValue,
 	)
 
