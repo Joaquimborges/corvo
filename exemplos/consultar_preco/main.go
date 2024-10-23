@@ -30,7 +30,7 @@ func main() {
 	codigoProduto := "03310" //PAC CONTRATO PGTO ENTREGA
 	cepDestino := "22222222"
 
-	data, er := ws.CheckDeliveryProductPrice(codigoProduto, cepDestino)
+	data, er := ws.CheckDeliveryProductPrice(codigoProduto, cepDestino, 0)
 	if er != nil {
 		// trate o erro
 		log.Fatal(er)
